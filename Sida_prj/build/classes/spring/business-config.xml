@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Uncomment and add your base-package here: <context:component-scan base-package="org.springframework.samples.service"/> -->
+	<!-- DAO, Service File -->
+
+	<import resource="datasource-config.xml" />
+
+	<!-- Sample Source <bean id="wishListService" class="com.itwill.red.service.impl.WishListServiceImpl"> 
+		<property name="wishListDao" ref="wishListDao"/> <property name="productService" 
+		ref="productService"/> </bean> -->
+
+	<bean id="schedulerDao" class="com.itwill.sida.dao.impl.SchedulerDaoImpl">
+		<property name="schedulerMapper" ref="schedulerMapper" />
+	</bean>
+
+	<bean id="schedulerService" class="com.itwill.sida.service.impl.SchedulerServiceImpl">
+		<property name="schedulerDao" ref="schedulerDao" />
+	</bean>
+
+</beans>

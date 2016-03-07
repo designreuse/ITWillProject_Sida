@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<context:component-scan base-package="com.itwill.sida.*" />
+    <mvc:annotation-driven />
+  	<bean id="mappingJackson2HttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/html;charset=UTF-8</value>
+                <value>application/json;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+ 
+	<import resource="business-config.xml" />
+	
+	<mvc:resources mapping="docs/**" location="resource/docs/" />
+	<mvc:resources mapping="img/**" location="resource/img/" />
+	<mvc:resources mapping="scripts/**" location="resource/scripts/" />
+	<mvc:resources mapping="localImg/**" location="resource/localImg/" />
+	<mvc:resources mapping="plugins/**" location="resource/plugins/" />
+	
+	<!-- 
+	 json view-->
+	<bean name="jsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" >
+      <property name="contentType" value="application/json;charset=UTF-8"/>
+	</bean> 
+	
+	<!-- 
+	 viewResolver-->
+	<bean class="org.springframework.web.servlet.view.BeanNameViewResolver"
+		p:order="0"
+	/> 
+		
+	<bean id="multipartResolver"
+  		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/view/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+   
+ <!-- ResolverException  -->
+ <bean class="com.itwill.sida.exception.ResolverException"/>
+ 
+ <!-- MailSender -->   
+<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="smtp.gmail.com" />
+		<property name="port" value="587" />
+		<property name="username" value="jossos2s2@gmail.com" />
+		<property name="password" value="sidaproject!" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.ssl.trust">smtp.gmail.com</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.smtp.auth">true</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="mailService" class="com.itwill.sida.mail.MailServiceImpl"></bean>
+</beans>

@@ -1,0 +1,36 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!-- BODY -->
+            <div class="body">
+
+                <section class="content">
+                    
+<ol class="breadcrumb">
+    <li><a href="index.html"><i class="fa fa-home fa-fw"></i> Home</a></li>
+    <li class="active">Page Not Found</li>
+</ol>
+
+<!-- CONTENT -->
+<div class="main-content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel error-panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-puzzle-piece"></i> Page Not Found</h3>
+                </div>
+                <div class="panel-body">
+                    <p>The page you are looking for does not exist.</p>
+                    <p>You may have mistyped the address or the page may have moved.</p>
+                    <p>
+                        <a href="javascript: history.back()">Go back to the previous page</a> /
+                        <a href="index.html">Go to the Ark Admin dashboard</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END: CONTENT -->
+                </section>
+            </div>
+            <!-- END: BODY -->

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="mybatis.mapper.CardMapper">
+	<resultMap id="cardResult" type="Card">
+ 		<id property="c_no" column="c_no" />
+ 		<result property="c_m_email" column="c_m_email"/>
+ 		<result property="c_name" column="c_name"/>
+ 		<result property="c_company" column="c_company"/>
+ 		<result property="c_keyword" column="c_keyword"/>
+ 		<result property="c_maincard" column="c_maincard"/>
+ 		<result property="c_sms_receive" column="c_sms_receive"/>
+ 	</resultMap>
+ 	
+ 	<insert id="insertCard" parameterType="java.util.Map">
+ 		INSERT INTO 
+ 		CARD (c_no, c_m_email, c_name, c_company, c_keyword, c_maincard, c_sms_receive)
+		VALUES (C_NO_SEQ.nextval, #{c_m_email,jdbcType=VARCHAR}, #{c_name,jdbcType=VARCHAR}, #{c_company,jdbcType=VARCHAR}, #{c_keyword,jdbcType=VARCHAR},
+		#{c_maincard,jdbcType=VARCHAR},#{c_sms_receive,jdbcType=VARCHAR})
+ 	</insert>
+ 	
+ 	<select id="selectCardListByEmail" parameterType="java.lang.String" resultMap="cardResult">
+ 		SELECT * 
+ 		FROM CARD
+		WHERE c_m_email=#{c_email}
+ 	</select>
+ 	
+ 	<select id="selectCardListByPhoneNum" parameterType="java.lang.String" resultMap="cardResult">
+ 		SELECT c.*
+		FROM card c, member m
+		WHERE m.M_EMAIL=c.C_M_EMAIL
+		AND m.M_PHONE=#{phone}
+ 	</select>
+ 	
+ 	<select id="selectCardListByPhoneNum_smsReceive" parameterType="java.lang.String" resultMap="cardResult">
+ 		SELECT c.*
+		FROM card c, member m
+		WHERE m.M_EMAIL=c.C_M_EMAIL
+		AND m.M_PHONE=#{phone}
+		AND c.c_sms_receive=1
+ 	</select>
+ 	
+ 	<select id="selectKeyword" parameterType="java.lang.String" resultType="java.lang.String">
+ 		SELECT c_keyword
+ 		FROM CARD
+		WHERE c_no=#{c_no}
+ 	</select>
+ 	
+ 	<select id="selectCard" parameterType="java.lang.String" resultMap="cardResult">
+ 		SELECT *
+ 		FROM CARD
+ 		WHERE c_no=#{c_no}
+ 	</select>
+ 	<update id="updateCard" parameterType="java.util.Map">
+ 		UPDATE CARD
+ 		SET c_keyword=#{c_keyword},c_maincard=#{c_mailcard},c_sms_receive=#{c_sms_receive}
+ 		WHERE c_no=#{c_no} 
+ 	</update>
+ 	<delete id="deleteCard" parameterType="java.lang.String">
+ 		DELETE CARD
+ 		WHERE c_no=#{c_no}
+ 	</delete>
+</mapper>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="mybatis.mapper.MemberMapper">
+ 	<resultMap id="memberResult" type="Member">
+ 		<id property="m_email" column="m_email" />
+ 		<result property="m_pwd" column="m_pwd"/>
+ 		<result property="m_name" column="m_name"/>
+ 		<result property="m_image" column="m_image"/>
+ 		<result property="m_phone" column="m_phone"/>
+ 		<result property="m_profile" column="m_profile"/>
+ 	</resultMap>
+ 	
+ 	<select id="findMemberByPhoneNo" parameterType="java.lang.String" 
+ 		resultMap="memberResult">
+ 		select * 
+ 		from member
+ 		where m_phone=#{phone}
+ 	</select>
+ 	
+ 	<select id="findMemberByEmail" parameterType="java.util.Map" 
+ 		resultMap="memberResult">
+ 		select * 
+ 		from member
+ 		where m_email=#{m_email}
+ 	</select>
+ 	
+ 	<select id="selectMember" resultMap="memberResult">
+ 		select * 
+ 		from member 
+ 		where m_email=#{m_email}
+ 		AND m_pwd=#{m_pwd}
+ 	</select>
+ 	<insert id="joinMember" parameterType="Member">
+ 		INSERT INTO MEMBER (m_email, m_pwd, m_name) 
+		VALUES (#{m_email},#{m_pwd},#{m_name})
+ 	</insert>
+ 	<update id="updatePwd" parameterType="Member">
+ 		UPDATE member
+ 		SET m_pwd=#{m_pwd}
+ 		WHERE m_email=#{m_email}
+ 	</update>
+ 	<update id="updateImg" parameterType="Member">
+ 		UPDATE member
+ 		SET m_image=#{m_image}
+ 		WHERE m_email=#{m_email}
+ 	</update>
+ 	<update id="updatePhoneNo" parameterType="Member">
+ 		UPDATE member
+ 		SET m_phone=#{m_phone}
+ 		WHERE m_email=#{m_email}
+ 	</update>
+ 	
+ </mapper>

@@ -1,0 +1,91 @@
+* id�� pk��?, no�� pk��? *
+
+create table member (
+ m_id varchar2(60) primary key,  
+ m_pwd varchar2(60) not null,
+ m_name varchar2(80) not null,
+ m_image varchar2(2000)
+)
+
+================================================
+
+create table card (
+ c_no number primary key,
+ c_m_id varchar2(60),
+ c_name varchar2(60) not null,
+ c_company varchar2(60) not null,
+ c_keyword varchar2(2000) not null  -- 필터링할 키워드 등록 (한컬럼에 다 넣을지, 키워드당 한 컬럼에 넣을지 ..)
+ 
+)
+
+ALTER TABLE card ADD CONSTRAINT c_m_id
+FOREIGN KEY(m_id) REFERENCES member;
+
+================================================
+
+create table addressBook (
+ ab_no number primary key,
+ ab_m_id varchar2(60),
+ ab_first_name varchar2(80),
+ ab_last_name varchar2(80),
+ ab_company varchar2(60),
+ ab_mnunber varchar2(40), -- 번호1
+ ab_hnumber varchar2(40), -- 번호2
+ ab_cnumber varchar2(40), -- 번호3
+ ab_address varchar2(4000),
+ ab_image varchar2(2000),
+ ab_bcard varchar2(2000),   -- 명함
+ ab_memo varchar2(4000)
+ 
+)
+ALTER TABLE addressBook ADD CONSTRAINT ab_m_id
+FOREIGN KEY(m_id) REFERENCES member;
+
+================================================
+
+create table schedule (    -- 년, 월, 일 분리
+  s_code number not null,
+  s_year number check(s_year BETWEEN 2000 AND 2999),
+  s_mon number check(s_mon BETWEEN 1 AND 12),
+  s_day number check(s_day BETWEEN 1 AND 31),
+  s_hour number check(s_hour BETWEEN 0 AND 24),
+  s_memo varchar2(2000),
+  s_m_id varchar2(60)
+)
+ALTER TABLE schedule ADD CONSTRAINT s_m_id
+FOREIGN KEY(m_id) REFERENCES member;
+
+
+================================================
+--영준 작성
+create table scheduler 
+  
+  s_no number primary key,
+  s_m_id varchar2(60),
+  s_type varchar(4), -- 할일 or 기념일
+  s_status varchar2(4), -- 완료상태 
+  s_looptype varchar2(4), -- 한번 or 매년  
+  s_startdate varchar2(10),
+  s_enddate varchar2(10),
+  s_starttime number(8) default 0900, 
+  s_endtime number(8) default 1800,
+  s_memo varchar2(2000)
+  
+)
+ALTER TABLE schedule ADD CONSTRAINT s_m_id
+FOREIGN KEY(m_id) REFERENCES member;
+
+================================================
+
+create table moneyBook (
+ mb_no number primary key,
+ mb_m_id varchar2(60),
+ mb_date VARCHAR2(10) not null,
+ mb_category varchar2(200) not null,      -- 분류 선택
+ mb_income number,
+ mb_outgo number, 
+ mb_outtype varchar2(30), 
+ mb_memo varchar(4000)
+)
+ALTER TABLE moneyBook ADD CONSTRAINT mb_m_id
+FOREIGN KEY(m_id) REFERENCES member;

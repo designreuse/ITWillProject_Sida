@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="mybatis.mapper.AddressBookMapper">
+ 	<resultMap id="addressBookResult" type="AddressBook">
+ 		<id property="ad_no" column="ad_no" />
+ 		<result property="ad_m_email" column="ad_m_email"/>
+ 		<result property="ad_name" column="ad_name"/>
+ 		<result property="ad_company" column="ad_company"/>
+ 		<result property="ad_mnumber" column="ad_mnumber"/>
+ 		<result property="ad_hnumber" column="ad_hnumber"/>
+ 		<result property="ad_cnumber" column="ad_cnumber"/>
+ 		<result property="ad_address" column="ad_address"/>
+ 		<result property="ad_email" column="ad_email"/>
+ 		<result property="ad_image" column="ad_image"/>
+ 		<result property="ad_memo" column="ad_memo"/>
+ 	</resultMap>
+
+ 	<select id="selectAdImage" parameterType="java.lang.String" resultType="map">
+ 		SELECT ad_image
+ 		FROM addressbook
+ 		WHERE ad_no = #{ad_no}
+ 	</select>
+ 	
+ 	<select id="selectAddressList" parameterType="java.lang.String" resultMap="addressBookResult">
+ 		select * 
+ 		from addressbook
+ 		WHERE ad_m_email=#{m_email}
+ 	</select>
+ 	
+ 	<select id="selectAddressOne" parameterType="java.lang.String" resultMap="addressBookResult">
+ 		select * 
+ 		from addressbook
+ 		where ad_no=#{ad_no}
+ 	</select>
+ 	
+ 	<select id="findAddressByCompany" parameterType="java.util.Map" resultMap="addressBookResult">
+ 		select * 
+ 		from addressbook
+ 		where ad_company like '%' || #{s_text} || '%' and ad_m_email = #{ad_m_email}
+ 	</select>
+ 	<select id="findAddressByName" parameterType="java.util.Map" resultMap="addressBookResult">
+ 		select * 
+ 		from addressbook
+ 		where ad_name like '%' || #{s_text} || '%' and ad_m_email = #{ad_m_email}
+ 	</select>
+ 	<select id="findAddressByNumber" parameterType="java.util.Map" resultMap="addressBookResult">
+ 		select * 
+ 		from addressbook
+ 		where ad_mnumber like '%' || #{s_text} || '%' or ad_hnumber like '%' || #{s_text} || '%' or ad_cnumber like '%' || #{s_text} || '%' and ad_m_email = #{ad_m_email}
+ 	</select>
+ 	
+ 	<insert id="createAddress" parameterType="AddressBook">
+ 		INSERT INTO ADDRESSBOOK (ad_no, ad_m_email, ad_name, ad_company, ad_mnumber, ad_hnumber, ad_cnumber,
+ 								ad_address, ad_email, ad_image, ad_memo) 
+		VALUES (ad_no_seq.NEXTVAL,#{ad_m_email},#{ad_name},#{ad_company},#{ad_mnumber},#{ad_hnumber},
+								#{ad_cnumber},#{ad_address},#{ad_email},#{ad_image},#{ad_memo})
+ 	</insert>
+ 	<update id="updateAddress" parameterType="java.util.Map">
+ 		UPDATE ADDRESSBOOK 
+ 		SET ad_m_email=#{ad_m_email}, ad_name=#{ad_name}, ad_company=#{ad_company},
+ 		 	ad_mnumber=#{ad_mnumber}, ad_hnumber=#{ad_hnumber}, ad_cnumber=#{ad_cnumber}, ad_address=#{ad_address},
+ 		 	ad_email=#{ad_email},ad_image=#{ad_image},ad_memo=#{ad_memo}
+ 		WHERE ad_no=#{ad_no}
+ 	</update>
+ 	<delete id="deleteAddress" parameterType="java.lang.String">
+ 		DELETE FROM addressbook 
+ 		WHERE ad_no=#{ad_no}
+ 	</delete>
+ 	<update id="updateImg" parameterType="AddressBook">
+ 		UPDATE ADDRESSBOOK
+ 		SET ad_image=#{ad_image}
+ 		WHERE ad_no=#{ad_no}
+ 	</update>
+ 	<update id="updateAddressBookImage" parameterType="AddressBook">
+ 		UPDATE ADDRESSBOOK
+ 		SET ad_image=#{ad_image}
+ 		WHERE ad_no=#{ad_no}
+ 	</update>
+ 	
+ </mapper>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="mybatis.mapper.SchedulerMapper">
+<!-- 
+S_NO
+S_M_EMAIL
+S_TYPE
+S_STATUS
+S_LOOPTYPE
+S_ALLDAY
+S_START
+S_END
+S_TITLE
+S_MEMO
+ -->
+	<resultMap id="SchedulerResult" type="Scheduler">
+ 		<id property="s_no" column="s_no" />
+ 		<result property="s_m_email" column="s_m_email"/>
+ 		<result property="s_type" column="s_type"/>
+ 		<result property="s_status" column="s_status"/>
+ 		<result property="s_looptype" column="s_looptype"/>
+ 		<result property="s_allday" column="s_allday"/>
+ 		<result property="s_start" column="s_start"/>
+ 		<result property="s_end" column="s_end"/>
+ 		<result property="s_title" column="s_title"/>
+ 		<result property="s_memo" column="s_memo"/>
+ 	</resultMap>
+ 	
+ 	<select id="selectAllSchedule" resultMap="SchedulerResult">
+ 		select * from SCHEDULER
+ 	</select>
+ 	
+ 	<select id="selectById" parameterType="java.lang.String" resultMap="SchedulerResult">
+ 		select * from SCHEDULER
+ 		where s_m_email = #{s_m_email}
+ 	</select>
+ 	
+ 	<select id="selectByNo" parameterType="int" resultMap="SchedulerResult">
+ 		select * from SCHEDULER
+ 		where s_no = #{s_no}
+ 	</select>
+ 	
+ 	<select id="selectforHeadNav" parameterType="java.util.Map" resultMap="SchedulerResult">
+ 		select * from SCHEDULER
+ 		where s_m_email = #{s_m_email} and s_end >= #{s_end}
+ 		order by s_end ASC
+ 	</select>
+ 	
+ 	<select id="countForAlarm" parameterType="java.util.Map" resultType="int">
+ 		select count(*) from SCHEDULER
+ 		where s_m_email = #{s_m_email} and substr(s_end, 1, 10) >= #{s_end}
+ 	</select>
+ 	
+ 	<delete id="deleteSchedule" parameterType="int">
+ 		delete SCHEDULER 
+ 		where s_no = #{s_no}
+ 	</delete>
+ 	
+ 	<insert id="insertSchedule" parameterType="Scheduler">
+ 		INSERT INTO SCHEDULER(s_no, s_m_email, s_looptype, s_allday, s_start, s_end, s_title, s_memo)		
+			VALUES (S_NO_SEQ.nextval, #{s_m_email}, #{s_looptype}, #{s_allday}, #{s_start}, #{s_end}, #{s_title}, #{s_memo} )
+ 	</insert>
+ 	
+ 	<update id="updateSchedule" parameterType="Scheduler">
+		 update SCHEDULER
+		 set s_looptype = #{s_looptype}, s_allday = #{s_allday}, 
+		 	 s_start = #{s_start}, s_end = #{s_end}, s_title = #{s_title}, s_memo = #{s_memo}
+		 where s_no = #{s_no}
+ 	</update>
+ 	
+ 	
+</mapper>

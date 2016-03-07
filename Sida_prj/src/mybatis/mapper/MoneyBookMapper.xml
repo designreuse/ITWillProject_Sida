@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+ <mapper namespace="mybatis.mapper.MoneyBookMapper">
+ 	<resultMap id="moneyBookResult" type="moneyBook">
+ 		<id property="mb_no" column="mb_no" />
+ 		<result property="mb_m_email" column="mb_m_email"/>
+ 		<result property="mb_date" column="mb_date"/>
+ 		<result property="mb_category" column="mb_category"/>
+ 		<result property="mb_income" column="mb_income"/>
+ 		<result property="mb_outgo" column="mb_outgo"/>
+ 		<result property="mb_outType" column="mb_outType"/>
+ 		<result property="mb_memo" column="mb_memo"/>
+ 	</resultMap>
+ 	
+ 	<resultMap id="moneyBook_cardResult" type="java.util.Map">
+ 		<id property="c_name" column="c_name" />
+ 		<id property="tot" column="tot" />
+ 	</resultMap>
+ 	
+ 	<!-- 사용자별 & 월별 & 카드별 사용량  -->
+ 	<select id="selectMoneyBook_CardUsage" parameterType="java.util.Map" resultMap="moneyBook_cardResult">
+ 		select c.C_NAME, sum(m.MB_OUTGO) as tot from CARD c, MONEYBOOK m 
+		where m.mb_m_email = #{m_email}
+		AND to_Char(c.C_NO) = m.MB_OUTTYPE
+		<!-- AND m.MB_DATE like #{year}||'-'||#{month}||'-%' -->
+		group by c.C_NAME
+ 	</select>
+ 	<!-- 사용자별 & 월별 최고 사용량 (월별 최고액)-->
+ 	<select id="selectMoneyBook_UsedMax_Month" parameterType="java.util.Map" resultType="java.lang.String">
+ 		SELECT max(mb_outgo) FROM MONEYBOOk WHERE MB_M_EMAIL = #{m_email}
+ 		AND mb_date like #{year}||'-'||#{month}||'-%'
+ 	</select>
+ 	
+ 	<!-- 사용자별 최고 사용량 (최고액) -->
+ 	<select id="selectMoneyBook_UsedMax" parameterType="java.lang.String" resultType="java.lang.String">
+ 		SELECT max(mb_outgo) FROM MONEYBOOk WHERE MB_M_EMAIL = #{m_email}
+ 	</select>
+ 	
+ 	<!-- 연도별 &월별 사용량 -->
+ 	<select id="selectUsedListByMonth" parameterType="java.util.Map" resultType="java.lang.String">
+	 	select sum(mb_outgo) from MONEYBOOK where MB_M_EMAIL =#{m_email} 
+		and mb_date like #{year}||'-'||#{month}||'-%'
+ 	</select>
+ 	<!-- 파이차트 -->
+ 	<select id="percentChart" parameterType="java.util.Map" resultMap="moneyBookResult">
+ 	select count(*) mb_no,
+  	 count(decode(mb_category, '식비', 1)) mb_m_email,
+  	 count(decode(mb_category, '문화생활비', 1)) mb_date,
+  	 count(decode(mb_category, '건강관리비', 1)) mb_category,
+  	 count(decode(mb_category, '의류미용비', 1)) mb_income,
+  	 count(decode(mb_category, '교통비', 1)) mb_outgo,
+  	 count(decode(mb_category, '주거생활비', 1)) mb_outType,
+  	 count(decode(mb_category, '기타', 1)) mb_memo
+  
+  	 from moneybook where mb_date like #{mb_date}||'%' and mb_m_email=#{mb_m_email}
+ 	<!--  select count(*) mb_category,
+  	 count(decode(mb_category, '식비', 1)) as 식비,
+  	 count(decode(mb_category, '문화생활비', 1)) as 문화생활비,
+  	 count(decode(mb_category, '건강관리비', 1)) as 건강관리비,
+  	 count(decode(mb_category, '의류미용비', 1)) as 의류미용비,
+  	 count(decode(mb_category, '교통비', 1)) as 교통비,
+  	 count(decode(mb_category, '차량유지비', 1)) as 차량유지비,
+  	 count(decode(mb_category, '주거생활비', 1)) as 주거생활비,
+  	 count(decode(mb_category, '학비', 1)) as 학비,
+  	 count(decode(mb_category, '사회생활비', 1)) as 사회생활비,
+  	 count(decode(mb_category, '유흥비', 1)) as 유흥비,
+  	 count(decode(mb_category, '금융보험비', 1)) as 금융보험비,
+  	 count(decode(mb_category, '저축', 1)) as 저축,
+  	 count(decode(mb_category, '기타', 1)) as 기타
+  
+  	 from moneybook where mb_date like #{mb_date}||'%' and mb_m_email=#{mb_m_email} -->
+  	 
+ 	</select>
+ 	
+ 	<!-- 지정 날짜 지출 합계 -->
+ 	<select id="selectMoneyBook_UsedTotal" parameterType="java.util.Map" resultType="java.lang.String">
+ 		select sum(mb_outgo) 
+ 		from MONEYBOOK 
+ 		where MB_M_EMAIL =#{m_email}
+		and MB_DATE like #{year}||'-'||#{month}||'-'||#{day}||' %'
+ 	</select>
+ 	
+ 	<select id="selectMoneyBook_UsedTotal_Month" parameterType="java.util.Map" resultType="java.lang.String">
+ 		select sum(mb_outgo) 
+ 		from MONEYBOOK 
+ 		where MB_M_EMAIL =#{m_email}
+		and MB_DATE like #{year}||'-'||#{month}||'-%'
+ 	</select>
+ 	
+ 	<!-- 달별 소비 전체 리스트 -->
+ 	<select id="resultMonthAll" parameterType="java.util.Map" resultMap="moneyBookResult">
+ 		select * from moneybook where mb_date like #{mb_date}||'%' and mb_m_email=#{mb_m_email} order by mb_date desc
+ 	</select>
+ 	<!-- 달별 날짜별 지출총액 -->
+ 	<select id="findMonthDate" parameterType="java.util.Map" resultMap="moneyBookResult">
+		select mb_date, sum(mb_outgo) mb_outgo
+		from moneybook
+		where mb_date like #{mb_date}||'%' and mb_m_email=#{mb_m_email}
+   		group by mb_date order by mb_date desc
+   		
+   		<!-- 2016022414:22 -->
+ 		
+ 	</select>
+ 	
+ 	<!-- test -->
+ 	<select id="test" parameterType="java.util.Map" resultMap="moneyBookResult">
+ 	select * from moneybook where mb_date like #{mb_date}||'%' and mb_m_email=#{mb_m_email} order by mb_date desc
+ 	</select>
+ 	
+ 	<!-- 달별 시작일~종료일 사용금액 -->
+ 	<select id="dateList" parameterType="java.util.Map" resultMap="moneyBookResult">
+ 	<!-- select min(mb_date) mb_no, max(mb_date) mb_date, sum(mb_outgo) mb_outgo from moneybook where mb_date like #{mb_date}||'__' and mb_m_email=#{mb_m_email} -->
+ 	select min(mb_date) mb_date, max(mb_date) mb_memo, sum(mb_outgo) mb_outgo from moneybook where mb_date like #{mb_date}||'%' and mb_m_email=#{mb_m_email}
+ 	</select>
+ 	
+ 	<!-- insert moneyBook -->
+ 	<select id="insertMoneyBook" parameterType="java.util.Map" resultMap="moneyBookResult">
+ 	  insert into moneybook 
+ 	  values (mb_no_seq.nextval, #{mb_m_email},#{mb_date},#{mb_category,jdbcType=VARCHAR},#{mb_income, jdbcType=INTEGER},#{mb_outgo, jdbcType=INTEGER},#{mb_outType, jdbcType=VARCHAR},#{mb_memo, jdbcType=VARCHAR})
+ 	
+ 	</select>
+ 	<!-- 달별 처음소비한 날짜~마지막소비날짜 / 한달사용총금액 -->
+ 	<select id="findMinMaxSum" parameterType="java.util.Map" resultMap="moneyBookResult">
+ 	select min(mb_date) mb_no, max(mb_date) mb_date, sum(mb_outgo) mb_outgo from moneybook where mb_date like #{search_value}||'__' and mb_m_email=#{mb_m_email}
+ 	</select>
+ 	
+ 	<!-- 지출형태 조건검색 -->
+ 	<select id="findMoneyBookOutTypeResult" parameterType="java.util.Map" resultMap="moneyBookResult">
+ 	select * 
+ 	from MONEYBOOK 
+ 	where mb_date=#{mb_date}
+ 	</select>
+ 	
+ 	<!-- 지출형태 조건검색 수정(이메일기준)-->
+ 	<select id="findMoneyBookOutTypeEmail" parameterType="java.util.Map" resultMap="moneyBookResult">
+ 	select * 
+ 	from MONEYBOOK 
+ 	where  mb_date like #{mb_date}||'%' and mb_m_email=#{mb_m_email} order by mb_date desc
+ 	</select>
+ 	
+ 	<!-- 날짜 기준 지출목록 출력 -->
+ 	<select id="findMoneyBookDateExpense" parameterType="java.util.Map" resultMap="moneyBookResult">
+		select * from moneybook where mb_date like #{mb_date}||'%' order by mb_date desc
+ 		<!-- select * from moneybook where mb_date=#{mb_date} and mb_m_email=#{mb_m_email} -->
+ 		
+ 	</select>
+ 	<!-- 날짜별 지출 총액 -->
+ 	<select id="findMoneyBookDate" parameterType="String" resultMap="moneyBookResult">
+		select mb_date, sum(mb_outgo) mb_outgo
+		from moneybook
+		where mb_m_email=#{mb_m_email}
+   		group by mb_date order by mb_date desc
+ 		
+ 	</select>
+ 	
+ 	<select id="findMoneyBookEmailResult" parameterType="String" resultMap="moneyBookResult">
+ 		select * from moneybook where mb_m_email=#{mb_m_email} order by mb_date desc
+ 	</select>
+ 	
+	<select id="findMoneyBookEmailResult_10" parameterType="String" resultMap="moneyBookResult">
+ 		select * 
+		from (select *
+				from moneybook 
+				where mb_m_email=#{mb_m_email}
+				ORDER BY mb_date desc) a
+		where rownum &lt;=10
+
+ 	</select>
+ 
+ 	<select id="findMoneyBookAll" resultMap="moneyBookResult">
+ 		select * from moneybook
+ 	</select>
+ 	<select id="findMoneyBookNo" parameterType="int" resultMap="moneyBookResult">
+		select * from moneybook where mb_no = #{mb_no}
+	</select>
+	
+	<delete id="deleteMoneyBook" parameterType="int">
+ 		delete from moneybook
+ 		where mb_no=#{mb_no}
+ 	</delete>
+ 	
+ 	<update id="editMoneyBook" parameterType="java.util.Map">
+ 		UPDATE moneyBook
+ 		SET mb_date=#{mb_date}, mb_category=#{mb_category}, mb_income=#{mb_income}, mb_outgo=#{mb_outgo}, mb_outType=#{mb_outType}, mb_memo=#{mb_memo}
+ 		WHERE mb_no=#{mb_no} 
+ 	</update>
+	
+ </mapper>

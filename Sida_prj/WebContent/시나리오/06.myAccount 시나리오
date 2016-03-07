@@ -1,0 +1,7 @@
+My Account 기능 설명
+ 1. AccountSetting
+   - 계정의 비밀번호, 핸드폰번호, 프로필 이미지 수정
+   - 프로필 사진은 DB 에 이미지 Path 로 저장
+   
+ 2. My Profile 
+   - 본인의 프로필을 볼수 있는 My Page

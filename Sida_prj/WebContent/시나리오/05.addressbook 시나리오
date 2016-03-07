@@ -1,0 +1,26 @@
+addressbook 시나리오
+
+1. 주소록 추가
+	- Add address버튼을 누르면 입력 팝업창이 생성.
+	- select image버튼으로 사진 추가, select image버튼이 Change 버튼과 Remove버튼으로 바뀜.
+	- 모든 값에 null이 들어갈 수 있음.
+	
+2. Detail정보 확인
+	- addressBook페이지에서 Detail버튼을 누르면 표가 늘어나며 addressbook테이블의 나머지 컬럼데이터들을 확인가능.
+	
+3. 주소록 수정
+	- 간단한 컬럼 변경후 확인 (Name, Company, Email, Mobile, Address 컬럼)
+	
+4. 주소 검색
+	- Radio 버튼의 옵션을 하나 선택하고 검색. number의 경우 집, 회사, 핸드폰컬럼을 통합검색
+
+5. 주소 삭제
+	- 삭제 후 주소록 리스트 확인
+
+
+
+
+ - 기본적인 데이터 crud를 다뤘습니다.
+ - ad_image는 blob데이터형식으로 byte데이터배열로 입력되어있습니다.
+ - bootstrap collapse효과 추가
+ 

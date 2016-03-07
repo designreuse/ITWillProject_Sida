@@ -1,0 +1,15 @@
+- sts Maven 연동시 POM.xml 에 plugin 에러 발생할 경우 해결방법
+
+1. [USER_HOME]\.m2\repository\org\apache\maven\plugins\maven-plugins 
+       지우고  Update Project
+
+2.
+	<dependency>
+	    <groupId>org.apache.maven.plugins</groupId>
+	    <artifactId>maven-resources-plugin</artifactId>
+	    <version>2.4.3</version>
+	</dependency>
+	
+	추가하고 
+	1) Run As > Maven Instal
+	2) Maven > Update Project

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<properties resource="spring/data-access.properties" />
+	<typeAliases>
+		<typeAlias type="com.itwill.sida.dto.MoneyBook" alias="MoneyBook" />
+		<typeAlias type="com.itwill.sida.dto.Member" alias="Member" />
+		<typeAlias type="com.itwill.sida.dto.Card" alias="Card" />
+		<typeAlias type="com.itwill.sida.dto.Scheduler" alias="Scheduler" />
+		<typeAlias type="com.itwill.sida.dto.AddressBook" alias="AddressBook" />
+		<package name="mybatis.mapper" />
+	</typeAliases> 
+<!-- 	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="${jdbc.driverClassName}" />
+				<property name="url" value="${jdbc.url}" />
+				<property name="username" value="${jdbc.username}" />
+				<property name="password" value="${jdbc.password}" />
+			</dataSource>
+		</environment>
+	</environments> -->
+	
+	<mappers>
+		<mapper class="mybatis.mapper.AddressBookMapper"/>
+		<mapper class="mybatis.mapper.MoneyBookMapper"/>
+		<mapper class="mybatis.mapper.MemberMapper"/>
+		<mapper class="mybatis.mapper.CardMapper"/>
+		<mapper class="mybatis.mapper.SchedulerMapper"/>
+	</mappers>
+<!-- 	<mappers>
+		<mapper resource="mybatis/mappers/MemberMappers.xml" />
+		 <mapper resource="mybatis/mappers/ReviewMappers.xml" />
+ 		<mapper class="mybatis.mappers.ReviewMappers" />
+		<mapper class="mybatis.mappers.MemberMapper" />
+		<mapper class="mybatis.mappers.ProductMapper" />
+		<mapper class="mybatis.mappers.OrdersMapper" />
+		<mapper class="mybatis.mappers.WishListMapper" />
+		<mapper class="mybatis.mappers.OrdersDetailMapper" />
+ 		<mapper resource="mybatis/mappers/Orders_DetailMapper.xml" />
+	</mappers> -->
+</configuration>
